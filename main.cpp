@@ -51,7 +51,7 @@ int main() {
 
     short menu = 0;
     while (menu != 4) {
-        cout << "Choose Operation: |1) Conversion |2) binVarary Math |4) Exit" << endl;
+        cout << "Choose Operation: |1) Conversion |2) Binary Math |4) Exit" << endl;
         cin >> menu;
 
         switch (menu) {
