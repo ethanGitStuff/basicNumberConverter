@@ -1,50 +1,87 @@
 #include <iostream>
+#include <bitset>
 #include <cmath>
+#include <vector>
 
 using namespace std;
 
+vector<bool> intToBinary(int val) {
+    int curr = val;
+    int result = val;
+    bool remainder = 0;
+
+    vector<bool> bits;
+
+    while (result != 0) {
+        remainder = curr % 2;
+        result = curr / 2;
+        bits.insert(bits.begin(), remainder);
+        curr = result;
+    }
+
+    while (bits.size() % 4 != 0) {
+        bits.insert(bits.begin(), 0);
+    }
+    return bits;
+}
+
+void printResults(int val) {
+    vector<bool> bits = intToBinary(val);
+    cout << "Binary: ";
+    for (bool b : bits) {
+        cout << b;
+    }
+    cout << endl;
+    cout << "Decimal: " << dec << val << endl;
+    cout << "Hex: " << hex << val << endl;
+}
+
 void conversion() {
     string input = "";
-    short type = 0;
+    char numberType;
+    int decVar;
+    int binVar = 0;
+    int hexVar = 0;
 
-    int decVar = 0;
-    string binVar = "";
-    string hexVar = "";
-
-    cout << "Use prefixes - b : d : x" << endl;
-    cout << "Choose number to convert: " << endl;
+    cout << "Use prefix \'b\' for binary input and \'x\' for hex." << endl;
+    cout << "Input number to convert: " << endl;
     cin >> input;
 
-    if (input.length() <= 1 || (input[0] != 'b' && input[0] != 'd' && input[0] != 'x')) {
-        cout << "Invalid Input" << endl;
-        return;
+    numberType = input[0];
+    if (isdigit(numberType)) {
+        decVar = stoi(input);
+        printResults(decVar);
     }
+    else if (numberType == 'b') {
+        input = input.substr(1, string::npos);
+        while (input.length()) {
+            if (input[0] != '1' && input[0] != '0') { cout << "Invalid Input - Try Again" << endl; return; }
 
-    string operand = input.substr(1, input.length() - 1);
-
-    switch(input[0]) {
-        case 'b':
-            binVar = operand;
-            for (int i = 0; i < operand.length(); ++i) {
-                int temp = operand[operand.length() - 1 - i] - '0';
-                if (temp != 0) { decVar += pow(2, i * temp); }
-            }
-            break;
-        case 'x':
-            for (int i = 0; i < operand.length(); ++i) {
-                char currChar = operand[operand.length() - 1 - i];
-                switch (currChar) {
-                    case 'a':
-                }
-            }
-            break;
-        default:
-            decVar = stoi(operand);
-            break;
+            binVar += (input[0] - '0') * pow(2, input.length() - 1);
+            input = input.substr(1, string::npos);
+        }
+        printResults(binVar);
     }
-    cout << "Decimal: " << dec << decVar << endl;
-    cout << "Binary: " << binVar << endl;
-    cout << "Hex: " << hex << decVar << endl;
+    else if (numberType == 'x') {
+        input = input.substr(1, string::npos);
+        while (input.length()) {
+            if (isdigit(input[0])) {
+                hexVar += input[0] - '0';
+            }
+            else if (input[0] >= 97 && input[0] <= 102) {
+                hexVar += input[0] - 87;
+            }
+            else if (input[0] >= 65 && input[0] <= 70) {
+                hexVar += input[0] - 55;
+            }
+            else {
+                cout << "Invalid input - Try Again" << endl;
+                return;
+            }
+            input = input.substr(1, string::npos);
+        }
+    }
+    printResults(hexVar);
 }
 
 int main() {
